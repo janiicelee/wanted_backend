@@ -15,20 +15,20 @@ from .models import User
 class UserView(View):
     def post(self, request):
         data = json.loads(request.body)
-
+        
         try:
-            if len(data['password']) < 5:
+            if len(data['password'])<5:
                 return JsonResponse({'message':'SHORT_PASSWORD'}, status = 400)
             
-            validates_email(data['email'])
+            validate_email(data['email'])
             hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
 
             User(
-                name = data['name'],
+                user = data['user'],
                 email = data['email'],
                 password = hashed_password.decode('utf-8')
             ).save()
-
+            
             return JsonResponse({'message':'SUCCESS'}, status = 200)
 
         except KeyError:
@@ -53,7 +53,7 @@ class AuthView(View):
 
             user = User.objects.get(email= data['email'])
             if bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
-                access_token = jwt.encode({'id':user_id}, SECRET_KEY, algorithm='HS256')
+                access_token = jwt.encode({'id':user.id}, SECRET_KEY, algorithm='HS256')
                 return JsonResponse({'access_token': access_token.decode('utf-8')}, status = 200)
 
             else:

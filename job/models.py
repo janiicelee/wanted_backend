@@ -5,6 +5,7 @@ class JobPosting(models.Model):
     company = models.ForeignKey('Company', on_delete = models.SET_NULL, null=True)
     category = models.ForeignKey('Category', on_delete = models.SET_NULL, null=True)
     sub_category = models.ForeignKey('SubCategory', on_delete = models.SET_NULL, null=True)
+    title = models.CharField(max_length = 50, null=True)
     image = models.URLField(max_length = 2000, null = True)
     details = models.TextField(null = True)
     created_at = models.DateTimeField(auto_now_add = True)
